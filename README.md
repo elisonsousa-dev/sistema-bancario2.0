@@ -1,4 +1,4 @@
-# Sistema Banário 2.0
+# Sistema Bancário 2.0
 
 Projeto desenvolvido em java com foco em Programação Orientada a Objetos.
 
