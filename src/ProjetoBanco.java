@@ -82,10 +82,6 @@ void main() {
               System.out.println("Saque efetuado com sucesso");
           }
 
-
-
-
-
          break;
       case 5:
            scanner.nextLine();
