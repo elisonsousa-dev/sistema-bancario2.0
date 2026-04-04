@@ -33,9 +33,9 @@ void main() {
           String senha = scanner.nextLine();
         Usuario novo = new Usuario();
         novo.cadastrar(nome , cpf , senha);
-           dados.addUsuarios(novo);
+           dados.adicionarUsuarios(novo);
            Conta conta = new Conta(novo);
-           banco.addBanco(novo,conta);
+           banco.adicionarConta(novo,conta);
          break;
       case 2:
            scanner.nextLine();
@@ -50,7 +50,7 @@ void main() {
 
             System.out.print("Valor: ");
             double valor = scanner.nextDouble();
-           Conta depositar = banco.pegarConta(pgCpf);
+           Conta depositar = banco.getConta(pgCpf);
          if(valor <=0 ){
             System.out.println("Erro: valor invalido");
         }else{
@@ -68,21 +68,23 @@ void main() {
 
             System.out.println("Valor:");
             double sacValor = scanner.nextDouble();
-          Conta saque = banco.pegarConta(sacCpf);
-        if(sacValor <= 0){
-            System.out.println("Erro; Valor invalido");
-        }else if(sacValor > saque.getSaldo()){
-            System.out.println("Erro: Saldo insuficiente");
-        }else{
-            if(saque != null){
-                System.out.println("Usuario: "+saque.getUsuario());
+          Conta contaUsuario = banco.getConta(sacCpf);
 
-                saque.sacar(sacValor);
-                System.out.println("Saque efetuado com sucesso");
-            }else{
-                System.out.println("Conta não encontrada");
-            }
-        }
+          if(contaUsuario == null){
+              System.out.println("Conta não encontrada");
+          }else  if(sacValor <= 0){
+              System.out.println("Erro; Valor invalido");
+          }else if(sacValor > contaUsuario.getSaldo()){
+              System.out.println("Erro: Saldo insuficiente");
+          }else {
+              System.out.println("Usuário: "+contaUsuario.getUsuario());
+              contaUsuario.sacar(sacValor);
+              System.out.println("Saque efetuado com sucesso");
+          }
+
+
+
+
 
          break;
       case 5:
@@ -95,7 +97,7 @@ void main() {
 
              System.out.print("Valor: ");
             double trsValor = scanner.nextDouble();
-          banco.transfer(de , para , trsValor);
+          banco.transferir(de , para , trsValor);
 
        break;
          case 6:

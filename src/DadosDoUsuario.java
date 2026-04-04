@@ -3,7 +3,8 @@ import java.util.HashMap;
 
 public class DadosDoUsuario {
    private HashMap<String, Usuario> usuarios = new HashMap<>();
-    public void addUsuarios(Usuario nome){
+
+    public void adicionarUsuarios(Usuario nome){
         usuarios.put(nome.getCpf() , nome);
     }
     public void listaDeusuario(){

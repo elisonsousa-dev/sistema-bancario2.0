@@ -3,8 +3,8 @@ import java.util.HashMap;
 public class Banco {
     private HashMap<String, Conta> contas = new HashMap<>();
 
-   public void addBanco(Usuario conta, Conta user){
-       contas.put(conta.getCpf() , user );
+   public void adicionarConta(Usuario usuario, Conta conta){
+       contas.put(usuario.getCpf() , conta );
    }
 
    public void listaDeContas(){
@@ -25,12 +25,12 @@ public class Banco {
            System.out.println("Conta não encontrada");
        }
    }
-   public Conta pegarConta(String cpf){
+   public Conta getConta(String cpf){
        return contas.get(cpf);
    }
-   public void transfer(String de , String para , double valor){
-       Conta origem = pegarConta(de);
-       Conta destino = pegarConta(para);
+   public void transferir(String de , String para , double valor){
+       Conta origem = getConta(de);
+       Conta destino = getConta(para);
 
        if(origem == null || destino == null){
            System.out.println("Erro: Uma das contas não foi encontrada");
