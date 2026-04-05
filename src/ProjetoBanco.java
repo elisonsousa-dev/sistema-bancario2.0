@@ -6,17 +6,18 @@ void main() {
 
     do {
         System.out.println();
-        System.out.println("==========================");
-        System.out.println("[1] Cadastrar conta");
-        System.out.println("[2] Ver saldo");
-        System.out.println("[3] Depositar");
-        System.out.println("[4] Sacar");
-        System.out.println("[5] Transferir ");
-        System.out.println("[6] Lista de contas");
-        System.out.println("[7] Lista de Usuarios");
-        System.out.println("[8] Buscar Usuario");
-        System.out.println("[9] Sair");
-        System.out.println("============================");
+        System.out.println("=|===========================|=");
+        System.out.println("=| [1] Cadastrar conta       |=");
+        System.out.println("=| [2] Ver saldo             |=");
+        System.out.println("=| [3] Depositar             |=");
+        System.out.println("=| [4] Sacar                 |=");
+        System.out.println("=| [5] Transferir            |=");
+        System.out.println("=| [6] Lista de contas       |=");
+        System.out.println("=| [7] Lista de Usuarios     |=");
+        System.out.println("=| [8] Buscar Usuario        |=");
+        System.out.println("=| [9] Login                 |=");
+        System.out.println("=| [10] Sair                 |=");
+        System.out.println("=|===========================|=");
         System.out.print("Opcao: ");
      opcao = scanner.nextInt();
 
@@ -36,6 +37,7 @@ void main() {
            dados.adicionarUsuarios(novo);
            Conta conta = new Conta(novo);
            banco.adicionarConta(novo,conta);
+         
          break;
       case 2:
            scanner.nextLine();
@@ -110,10 +112,27 @@ void main() {
              break;
 
          case 9:
+             scanner.nextLine();
+             System.out.print("CPF: ");
+             String loginCpf = scanner.nextLine();
+
+             System.out.print("Senha: ");
+             String loginSenha = scanner.nextLine();
+            Usuario loginUsuario = dados.login(loginCpf, loginSenha);
+
+            if(loginUsuario != null){
+                System.out.println("Bem-vindo, "+loginUsuario.getNome());
+                System.out.println("Usuario: "+loginUsuario.getNome()+" | CPF: "+loginUsuario.getCpf());
+            }else {
+                System.out.println("Sua conta não foi encontrada");
+                System.out.println("Verifique se sua senha ou CPF estão corretos");
+            }
+             break;
+         case 10:
              System.out.println("Saindo...");
              break;
      }
 
-    }while (opcao != 9);
+    }while (opcao != 10);
 
 }

@@ -19,9 +19,13 @@ public class Usuario {
         this.senha = senha;
     }
     public void cadastrar(String nome , String cpf , String senha){
-        this.nome = nome;
-        this.senha = senha;
-        this.cpf = cpf;
+            this.nome = nome;
+            this.senha = senha;
+            this.cpf = cpf;
+
+    }
+    public boolean autenticar(String cpf , String senha){
+        return cpf.equalsIgnoreCase(getCpf()) && senha.equalsIgnoreCase(getSenha());
     }
 
     @Override

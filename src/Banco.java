@@ -3,8 +3,14 @@ import java.util.HashMap;
 public class Banco {
     private HashMap<String, Conta> contas = new HashMap<>();
 
-   public void adicionarConta(Usuario usuario, Conta conta){
-       contas.put(usuario.getCpf() , conta );
+   public boolean adicionarConta(Usuario usuario, Conta conta){
+
+       if(contas.containsKey(usuario.getCpf())){
+          return false;
+       }else{
+           contas.put(usuario.getCpf() , conta );
+           return true;
+       }
    }
 
    public void listaDeContas(){
@@ -25,7 +31,7 @@ public class Banco {
            System.out.println("Conta não encontrada");
        }
    }
-   public Conta getConta(String cpf){
+   public Conta getConta(String cpf ){
        return contas.get(cpf);
    }
    public void transferir(String de , String para , double valor){

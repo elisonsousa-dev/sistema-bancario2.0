@@ -4,8 +4,13 @@ import java.util.HashMap;
 public class DadosDoUsuario {
    private HashMap<String, Usuario> usuarios = new HashMap<>();
 
-    public void adicionarUsuarios(Usuario nome){
-        usuarios.put(nome.getCpf() , nome);
+    public void adicionarUsuarios(Usuario usuario){
+        if(usuarios.containsKey(usuario.getCpf())){
+            System.out.println("Erro: Usuário ja existente");
+        }else{
+            usuarios.put(usuario.getCpf() , usuario);
+            System.out.println("Usuário cadastrado com sucesso");
+        }
     }
     public void listaDeusuario(){
         for(Usuario c: usuarios.values()){
@@ -25,6 +30,14 @@ public class DadosDoUsuario {
           System.out.println("Usuario não encontrado");
 
       }
+    }
+    public Usuario login(String cpf, String senha){
+          for(Usuario c : usuarios.values()){
+              if(c.autenticar(cpf, senha)){
+                  return c;
+              }
+          }
+          return null;
     }
 
 }

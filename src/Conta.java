@@ -6,6 +6,7 @@ public class Conta {
     public double getSaldo(){
         return saldo;
     }
+
      public Conta(Usuario usuario){
          this.usuario = usuario;
          this.saldo = 0;
@@ -29,7 +30,6 @@ public class Conta {
 
      public boolean sacar(double saque){
         if(saque <=0 ){
-
             System.out.println("Valor inválido.");
             return false;
         }else if(saque > getSaldo()){
