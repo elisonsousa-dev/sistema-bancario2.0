@@ -19,16 +19,31 @@ void main() {
         System.out.println("=| [10] Sair                 |=");
         System.out.println("=|===========================|=");
         System.out.print("Opcao: ");
-     opcao = scanner.nextInt();
+        try {
+            opcao = scanner.nextInt();
+        }catch (InputMismatchException erro){
+            System.out.println("Entrada inválida. Por favor, informe uma opção numérica válida do menu.");
+            scanner.nextLine();
+            opcao = 0;
+        }
 
      switch (opcao){
       case 1:
+          String cpf;
           scanner.nextLine();
           System.out.print("Digite seu nome: ");
             String nome = scanner.nextLine();
+             do {
+                 System.out.println("Formato: 000.000.000-00 ");
 
-             System.out.print("Digite seu [CPF]: ");
-              String cpf = scanner.nextLine();
+                 System.out.print("Digite seu CPF: ");
+                  cpf = scanner.nextLine();
+
+                 if(!cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")){
+                     System.out.printf("CPF inválido! User o formato correto");
+                 }
+
+             }while (!cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
 
             System.out.print("Digite uma senha: ");
           String senha = scanner.nextLine();
