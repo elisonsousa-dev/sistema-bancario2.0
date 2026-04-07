@@ -1,6 +1,6 @@
 public class Conta {
     private double saldo;
-    private Usuario usuario;
+    private final Usuario usuario;
 
 
     public double getSaldo(){
@@ -15,6 +15,7 @@ public class Conta {
      public Usuario getUsuario(){
         return usuario;
      }
+
      public boolean depositar(double dep){
         if(dep <= 0){
             System.out.println("Valor inválido");
@@ -42,6 +43,7 @@ public class Conta {
         }
 
      }
+
      public boolean transferir( Conta destino, double valor){
         if(valor <=0 ){
             System.out.println("Erro: Valor invalido");

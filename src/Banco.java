@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 public class Banco {
-    private HashMap<String, Conta> contas = new HashMap<>();
+    private final HashMap<String, Conta> contas = new HashMap<>();
 
    public boolean adicionarConta(Usuario usuario, Conta conta){
 
@@ -16,7 +16,7 @@ public class Banco {
    public void listaDeContas(){
        for(Conta c : contas.values()){
            System.out.printf("Conta: "+c.getUsuario());
-           System.out.println("| Saldo: "+c.getSaldo());
+           System.out.println(" | Saldo: "+c.getSaldo());
            System.out.println("------------------");
        }
    }
@@ -24,7 +24,7 @@ public class Banco {
        Conta u = contas.get(cpf);
 
        if(u != null){
-           System.out.println("Usuario:"+u.getUsuario());
+           System.out.println("Usuario: "+u.getUsuario());
            System.out.println("Saldo: "+u.getSaldo());
            System.out.println("---------------------------");
        }else {
@@ -34,6 +34,7 @@ public class Banco {
    public Conta getConta(String cpf ){
        return contas.get(cpf);
    }
+
    public void transferir(String de , String para , double valor){
        Conta origem = getConta(de);
        Conta destino = getConta(para);

@@ -30,6 +30,7 @@ void main() {
      switch (opcao){
       case 1:
           String cpf;
+          String senha;
           scanner.nextLine();
           System.out.print("Digite seu nome: ");
             String nome = scanner.nextLine();
@@ -40,59 +41,110 @@ void main() {
                   cpf = scanner.nextLine();
 
                  if(!cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")){
-                     System.out.printf("CPF inválido! User o formato correto");
+                     System.out.println("CPF inválido! User o formato correto");
                  }
 
              }while (!cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+             do {
+                 System.out.print("Digite uma senha: ");
+                 senha = scanner.nextLine();
 
-            System.out.print("Digite uma senha: ");
-          String senha = scanner.nextLine();
-        Usuario novo = new Usuario();
-        novo.cadastrar(nome , cpf , senha);
-           dados.adicionarUsuarios(novo);
-           Conta conta = new Conta(novo);
-           banco.adicionarConta(novo,conta);
-         
+                 if (senha.isEmpty()) {
+                     System.out.println("Senha não pode ser vazia!");
+                 }
+             }while (senha.isEmpty());
+
+            Usuario novo = new Usuario();
+            novo.cadastrar(nome , cpf , senha);
+            dados.adicionarUsuarios(novo);
+            Conta conta = new Conta(novo);
+            banco.adicionarConta(novo,conta);
          break;
       case 2:
+          String busCpf;
            scanner.nextLine();
-            System.out.println("Digite seu [CPF]: ");
-            String busCpf = scanner.nextLine();
+           do {
+               System.out.println("Digite seu [CPF]: ");
+               busCpf = scanner.nextLine();
+
+               if(!busCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")){
+                   System.out.println("CPF invalido! User o formato correto.");
+               }
+
+           }while (!busCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
            banco.buscarConta(busCpf);
+
          break;
       case 3:
+          String depCpf;
+          double valor = -1;
           scanner.nextLine();
-           System.out.print("Digite seu [CPF]: ");
-            String pgCpf = scanner.nextLine();
+          do {
+              System.out.print("Digite seu [CPF]: ");
+              depCpf = scanner.nextLine();
+              if (!depCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+                  System.out.println("CPF invalido! digite o formato correto");
+              }
+          }while (!depCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+          do {
 
-            System.out.print("Valor: ");
-            double valor = scanner.nextDouble();
-           Conta depositar = banco.getConta(pgCpf);
-         if(valor <=0 ){
-            System.out.println("Erro: valor invalido");
-        }else{
+              try {
+                  System.out.print("Valor: ");
+                  valor = scanner.nextDouble();
+
+                  if (valor <= 0) {
+                      System.out.println("Valor inválido.");
+                  }
+              } catch (InputMismatchException erro) {
+                  System.out.println("Erro na digitação! Somente digitos númericos.");
+                  scanner.nextLine();
+              }
+          }while (valor <= 0);
+           //
+           Conta depositar = banco.getConta(depCpf);
+
             if(depositar != null){
                 depositar.depositar(valor);
             }else{
                 System.out.println("Conta não encontrada");
             }
-        }
+
          break;
       case 4:
+          String sacCpf;
+          double sacValor = -1;
           scanner.nextLine();
-           System.out.print("Digite seu [CPF]: ");
-            String sacCpf = scanner.nextLine();
+          do {
+              System.out.print("Digite seu [CPF]: ");
+              sacCpf = scanner.nextLine();
 
-            System.out.println("Valor:");
-            double sacValor = scanner.nextDouble();
+              if (!sacCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+                  System.out.println("CPF inválido! Digite o formato correto.");
+              }
+          }while (!sacCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+          do {
+              //
+              try {
+                  System.out.println("Valor:");
+                  sacValor = scanner.nextDouble();
+
+                  if (sacValor <= 0) {
+                      System.out.println("Valor inválido!");
+                  }
+
+              } catch (InputMismatchException erro){
+                  System.out.println("Erro na digitação! Somente digitos númericos");
+                  scanner.nextLine();
+              }
+          }while (sacValor <= 0);
           Conta contaUsuario = banco.getConta(sacCpf);
 
           if(contaUsuario == null){
               System.out.println("Conta não encontrada");
-          }else  if(sacValor <= 0){
-              System.out.println("Erro; Valor invalido");
+
           }else if(sacValor > contaUsuario.getSaldo()){
               System.out.println("Erro: Saldo insuficiente");
+
           }else {
               System.out.println("Usuário: "+contaUsuario.getUsuario());
               contaUsuario.sacar(sacValor);
@@ -101,16 +153,37 @@ void main() {
 
          break;
       case 5:
+          String origem;
+          String destino;
+          double trsValor = -1;
            scanner.nextLine();
-            System.out.print("Origem: ");
-             String de = scanner.nextLine();
+           //
+            do {
+                System.out.print("Origem: ");
+                origem = scanner.nextLine();
 
-               System.out.print("Destino: ");
-               String para = scanner.nextLine();
+                System.out.print("Destino: ");
+                destino = scanner.nextLine();
+                if (!origem.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}") || !destino.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+                    System.out.println("CPF inválido! Digite o formato correto.");
+                }
+            }while (!origem.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}") || !destino.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+            do {
 
-             System.out.print("Valor: ");
-            double trsValor = scanner.nextDouble();
-          banco.transferir(de , para , trsValor);
+                try {
+                    System.out.print("Valor: ");
+                    trsValor = scanner.nextDouble();
+
+                    if (trsValor <= 0) {
+                        System.out.println("Valor inválido!");
+                    }
+
+                } catch (InputMismatchException erro) {
+                    System.out.println("Erro na digitação! Somente digitos númericos.");
+                    scanner.nextLine();
+                }
+            }while (trsValor <= 0);
+          banco.transferir(origem , destino , trsValor);
 
        break;
          case 6:
@@ -120,28 +193,49 @@ void main() {
              dados.listaDeusuario();
              break;
          case 8:
+             String logCpf;
              scanner.nextLine();
-             System.out.println("Digite seu [CPF]: ");
-             String logCpf = scanner.nextLine();
+             do {
+
+                 System.out.println("Digite seu [CPF]: ");
+                 logCpf = scanner.nextLine();
+
+                 if (!logCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+                     System.out.println("CPF inválido! Digite o formato correto.");
+                 }
+             }while (!logCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
              dados.buscarUsuario(logCpf);
              break;
 
          case 9:
+             String loginCpf;
+             String loginSenha;
              scanner.nextLine();
-             System.out.print("CPF: ");
-             String loginCpf = scanner.nextLine();
+             do {
+                 System.out.print("CPF: ");
+                 loginCpf = scanner.nextLine();
 
-             System.out.print("Senha: ");
-             String loginSenha = scanner.nextLine();
+                 if (!loginCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+                     System.out.println("CPF inválido! Digite o formato correto.");
+                 }
+             }while (!loginCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+            do {
+                System.out.print("Senha: ");
+                loginSenha = scanner.nextLine();
+                if (loginSenha.isEmpty()) {
+                    System.out.println("Senha não pode ser vazia!");
+                }
+            }while (loginSenha.isEmpty());
+
             Usuario loginUsuario = dados.login(loginCpf, loginSenha);
 
-            if(loginUsuario != null){
-                System.out.println("Bem-vindo, "+loginUsuario.getNome());
-                System.out.println("Usuario: "+loginUsuario.getNome()+" | CPF: "+loginUsuario.getCpf());
-            }else {
-                System.out.println("Sua conta não foi encontrada");
-                System.out.println("Verifique se sua senha ou CPF estão corretos");
-            }
+                if (loginUsuario != null) {
+                    System.out.println("Bem-vindo, " + loginUsuario.getNome());
+                    System.out.println("Usuario: " + loginUsuario.getNome() + " | CPF: " + loginUsuario.getCpf());
+                } else {
+                    System.out.println("Sua conta não foi encontrada");
+                    System.out.println("Verifique se sua senha ou CPF estão corretos");
+                }
              break;
          case 10:
              System.out.println("Saindo...");

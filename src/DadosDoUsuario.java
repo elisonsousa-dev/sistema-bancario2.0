@@ -2,7 +2,7 @@
 import java.util.HashMap;
 
 public class DadosDoUsuario {
-   private HashMap<String, Usuario> usuarios = new HashMap<>();
+   private final HashMap<String, Usuario> usuarios = new HashMap<>();
 
     public void adicionarUsuarios(Usuario usuario){
         if(usuarios.containsKey(usuario.getCpf())){
