@@ -1,6 +1,7 @@
 public class Conta {
     private double saldo;
     private final Usuario usuario;
+    private boolean ativa;
 
 
     public double getSaldo(){
@@ -10,6 +11,7 @@ public class Conta {
      public Conta(Usuario usuario){
          this.usuario = usuario;
          this.saldo = 0;
+         this.ativa = true;
 
      }
      public Usuario getUsuario(){
@@ -17,6 +19,7 @@ public class Conta {
      }
 
      public boolean depositar(double dep){
+
         if(dep <= 0){
             System.out.println("Valor inválido");
             return false;

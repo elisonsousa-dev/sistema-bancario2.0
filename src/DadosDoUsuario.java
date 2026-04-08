@@ -20,7 +20,7 @@ public class DadosDoUsuario {
         }
     }
     public void buscarUsuario(String cpf){
-      Usuario c = usuarios.get(cpf);
+        Usuario c = usuarios.get(cpf);
 
       if(c != null){
           System.out.println("Usuario: "+c.getNome());

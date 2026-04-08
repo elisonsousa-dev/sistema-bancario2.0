@@ -23,7 +23,6 @@ public class Usuario {
             this.setNome(nome);
             this.senha = senha;
             this.cpf = cpf;
-
     }
     public boolean autenticar(String cpf , String senha){
         return cpf.equalsIgnoreCase(getCpf()) && senha.equalsIgnoreCase(getSenha());

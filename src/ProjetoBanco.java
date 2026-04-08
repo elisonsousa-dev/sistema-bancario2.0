@@ -1,7 +1,10 @@
 void main() {
     Scanner scanner = new Scanner(System.in);
     DadosDoUsuario dados = new DadosDoUsuario();
+    Validacao Validador = new Validacao();
     Banco banco = new Banco();
+    boolean senhaValida;
+    boolean cpfValido;
      int opcao;
 
     do {
@@ -31,28 +34,27 @@ void main() {
       case 1:
           String cpf;
           String senha;
+
           scanner.nextLine();
           System.out.print("Digite seu nome: ");
             String nome = scanner.nextLine();
-             do {
-                 System.out.println("Formato: 000.000.000-00 ");
-
-                 System.out.print("Digite seu CPF: ");
-                  cpf = scanner.nextLine();
-
-                 if(!cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")){
-                     System.out.println("CPF inválido! User o formato correto");
-                 }
-
-             }while (!cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+                 do {
+                     System.out.println("Formato: 000.000.000-00 ");
+                     System.out.print("Digite seu CPF: ");
+                     cpf = scanner.nextLine();
+                     cpfValido = Validador.validarCPF(cpf);
+                     if(!cpfValido){
+                         System.out.println("CPF inválido! Digite o formato correto");
+                     }
+                 }while (!cpfValido);
              do {
                  System.out.print("Digite uma senha: ");
-                 senha = scanner.nextLine();
-
-                 if (senha.isEmpty()) {
+                  senha = scanner.nextLine();
+                  senhaValida = Validador.validarSenha(senha);
+                 if (!senhaValida) {
                      System.out.println("Senha não pode ser vazia!");
                  }
-             }while (senha.isEmpty());
+             }while (!senhaValida);
 
             Usuario novo = new Usuario();
             novo.cadastrar(nome , cpf , senha);
@@ -64,14 +66,15 @@ void main() {
           String busCpf;
            scanner.nextLine();
            do {
-               System.out.println("Digite seu [CPF]: ");
-               busCpf = scanner.nextLine();
+                System.out.println("Digite seu [CPF]: ");
+                busCpf = scanner.nextLine();
+              cpfValido =  Validador.validarCPF(busCpf);
 
-               if(!busCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")){
+               if(!cpfValido){
                    System.out.println("CPF invalido! User o formato correto.");
                }
 
-           }while (!busCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+           }while (!cpfValido);
            banco.buscarConta(busCpf);
 
          break;
@@ -82,10 +85,11 @@ void main() {
           do {
               System.out.print("Digite seu [CPF]: ");
               depCpf = scanner.nextLine();
-              if (!depCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+              cpfValido =  Validador.validarCPF(depCpf);
+              if (!cpfValido) {
                   System.out.println("CPF invalido! digite o formato correto");
               }
-          }while (!depCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+          }while (!cpfValido);
           do {
 
               try {
@@ -117,11 +121,12 @@ void main() {
           do {
               System.out.print("Digite seu [CPF]: ");
               sacCpf = scanner.nextLine();
+              cpfValido = Validador.validarCPF(sacCpf);
 
-              if (!sacCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+              if (!cpfValido) {
                   System.out.println("CPF inválido! Digite o formato correto.");
               }
-          }while (!sacCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+          }while (!cpfValido);
           do {
               //
               try {
@@ -156,18 +161,22 @@ void main() {
           String origem;
           String destino;
           double trsValor = -1;
+          boolean cpfValidoOr;
+          boolean cpfValidoDe;
            scanner.nextLine();
            //
             do {
                 System.out.print("Origem: ");
                 origem = scanner.nextLine();
+                 cpfValidoOr = Validador.validarCPF(origem);
 
                 System.out.print("Destino: ");
                 destino = scanner.nextLine();
-                if (!origem.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}") || !destino.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+                cpfValidoDe = Validador.validarCPF(destino);
+                if (!cpfValidoDe || !cpfValidoOr) {
                     System.out.println("CPF inválido! Digite o formato correto.");
                 }
-            }while (!origem.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}") || !destino.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+            }while (!cpfValidoOr || !cpfValidoDe);
             do {
 
                 try {
@@ -199,11 +208,12 @@ void main() {
 
                  System.out.println("Digite seu [CPF]: ");
                  logCpf = scanner.nextLine();
+                 cpfValido = Validador.validarCPF(logCpf);
 
-                 if (!logCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+                 if (!cpfValido) {
                      System.out.println("CPF inválido! Digite o formato correto.");
                  }
-             }while (!logCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+             }while (!cpfValido);
              dados.buscarUsuario(logCpf);
              break;
 
@@ -214,18 +224,22 @@ void main() {
              do {
                  System.out.print("CPF: ");
                  loginCpf = scanner.nextLine();
+                 cpfValido = Validador.validarCPF(loginCpf);
 
-                 if (!loginCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")) {
+                 if (!cpfValido) {
                      System.out.println("CPF inválido! Digite o formato correto.");
                  }
-             }while (!loginCpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+             }while (!cpfValido);
+
             do {
                 System.out.print("Senha: ");
                 loginSenha = scanner.nextLine();
-                if (loginSenha.isEmpty()) {
+                senhaValida = Validador.validarSenha(loginSenha);
+
+                if (!senhaValida) {
                     System.out.println("Senha não pode ser vazia!");
                 }
-            }while (loginSenha.isEmpty());
+            }while (!senhaValida);
 
             Usuario loginUsuario = dados.login(loginCpf, loginSenha);
 
@@ -241,7 +255,6 @@ void main() {
              System.out.println("Saindo...");
              break;
      }
-
     }while (opcao != 10);
 
 }
