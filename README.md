@@ -23,6 +23,11 @@ Projeto desenvolvido em java com foco em Programação Orientada a Objetos.
 ## Observações
 Projeto em evolução, com melhorias planejadas em validação e tratamentos de erros.
 
+## Atualizações:
+- Estrutura de dados atualizada
+- Nova class de validaçoes de erro e segurança
+- login de usuário, para poder acessa o banco (Ainda em melhorias)
+
 ## Autor
 Elison Sousa
 
