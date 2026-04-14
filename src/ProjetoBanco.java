@@ -1,10 +1,13 @@
 void main() {
     Scanner scanner = new Scanner(System.in);
     DadosDoUsuario dados = new DadosDoUsuario();
+    UsuarioDao dao = new UsuarioDao();
     Validacao Validador = new Validacao();
     Banco banco = new Banco();
+
     boolean senhaValida;
     boolean cpfValido;
+    boolean validar;
      int opcao;
 
     do {
@@ -30,53 +33,55 @@ void main() {
             opcao = 0;
         }
 
-     switch (opcao){
-      case 1:
-          String cpf;
-          String senha;
+     switch (opcao) {
+         case 1:
+             String cpf;
+             String senha;
 
-          scanner.nextLine();
-          System.out.print("Digite seu nome: ");
-            String nome = scanner.nextLine();
-                 do {
-                     System.out.println("Formato: 000.000.000-00 ");
-                     System.out.print("Digite seu CPF: ");
-                     cpf = scanner.nextLine();
-                     cpfValido = Validador.validarCPF(cpf);
-                     if(!cpfValido){
-                         System.out.println("CPF inválido! Digite o formato correto");
-                     }
-                 }while (!cpfValido);
+             scanner.nextLine();
+             System.out.print("Digite seu nome: ");
+             String nome = scanner.nextLine();
+             do {
+                 System.out.println("Formato: 000.000.000-00 ");
+                 System.out.print("Digite seu CPF: ");
+                 cpf = scanner.nextLine();
+                 cpfValido = Validador.validarCPF(cpf);
+                 if (!cpfValido) {
+                     System.out.println("CPF inválido! Digite o formato correto");
+                 }
+             } while (!cpfValido);
              do {
                  System.out.print("Digite uma senha: ");
-                  senha = scanner.nextLine();
-                  senhaValida = Validador.validarSenha(senha);
+                 senha = scanner.nextLine();
+                 senhaValida = Validador.validarSenha(senha);
                  if (!senhaValida) {
                      System.out.println("Senha não pode ser vazia!");
                  }
-             }while (!senhaValida);
+             } while (!senhaValida);
 
-            Usuario novo = new Usuario();
-            novo.cadastrar(nome , cpf , senha);
-            dados.adicionarUsuarios(novo);
-            Conta conta = new Conta(novo);
-            banco.adicionarConta(novo,conta);
-         break;
-      case 2:
-          String busCpf;
-           scanner.nextLine();
-           do {
-                System.out.println("Digite seu [CPF]: ");
-                busCpf = scanner.nextLine();
-              cpfValido =  Validador.validarCPF(busCpf);
+             Usuario novo = new Usuario();
+             novo.cadastrar(nome, cpf, senha);
+             dados.adicionarUsuarios(novo);
+             Conta conta = new Conta(novo);
+             dao.cadastrar(novo, conta);
+             banco.adicionarConta(novo, conta);
 
-               if(!cpfValido){
-                   System.out.println("CPF invalido! User o formato correto.");
-               }
+             break;
+         case 2:
+             String busCpf;
+             scanner.nextLine();
 
-           }while (!cpfValido);
-           banco.buscarConta(busCpf);
+                 do {
+                     System.out.println("Digite seu [CPF]: ");
+                     busCpf = scanner.nextLine();
+                     cpfValido = Validador.validarCPF(busCpf);
 
+                     if (!cpfValido) {
+                         System.out.println("CPF invalido! User o formato correto.");
+                     }
+
+                 } while (!cpfValido);
+             banco.buscarConta(busCpf);
          break;
       case 3:
           String depCpf;
@@ -107,8 +112,16 @@ void main() {
            //
            Conta depositar = banco.getConta(depCpf);
 
+           dao.depositar(depCpf, valor);
+
             if(depositar != null){
-                depositar.depositar(valor);
+                validar = depositar.depositar(valor);
+               if(!validar){
+                   System.out.println("Valor inválido");
+               }else{
+                   System.out.println("Deposito Realizado com sucesso");
+                   System.out.println("Depositado: "+depositar.getUsuario());
+               }
             }else{
                 System.out.println("Conta não encontrada");
             }
@@ -143,6 +156,7 @@ void main() {
               }
           }while (sacValor <= 0);
           Conta contaUsuario = banco.getConta(sacCpf);
+          dao.sacar(sacCpf, sacValor);
 
           if(contaUsuario == null){
               System.out.println("Conta não encontrada");
@@ -151,7 +165,7 @@ void main() {
               System.out.println("Erro: Saldo insuficiente");
 
           }else {
-              System.out.println("Usuário: "+contaUsuario.getUsuario());
+              //System.out.println("Usuário: "+contaUsuario.getUsuario());
               contaUsuario.sacar(sacValor);
               System.out.println("Saque efetuado com sucesso");
           }
@@ -241,7 +255,7 @@ void main() {
                 }
             }while (!senhaValida);
 
-            Usuario loginUsuario = dados.login(loginCpf, loginSenha);
+             Usuario loginUsuario = dao.login(loginCpf, loginSenha);
 
                 if (loginUsuario != null) {
                     System.out.println("Bem-vindo, " + loginUsuario.getNome());

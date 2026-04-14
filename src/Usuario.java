@@ -14,9 +14,15 @@ public class Usuario {
     public String getCpf(){
         return cpf;
     }
+    public void setCpf(String cpf){
+        this.cpf = cpf;
+    }
 
     public String getSenha(){
         return senha;
+    }
+    public void setSenha(String senha){
+        this.senha = senha;
     }
 
     public void cadastrar(String nome , String cpf , String senha){

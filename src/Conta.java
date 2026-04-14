@@ -1,7 +1,7 @@
 public class Conta {
     private double saldo;
     private final Usuario usuario;
-    private boolean ativa;
+
 
 
     public double getSaldo(){
@@ -11,7 +11,6 @@ public class Conta {
      public Conta(Usuario usuario){
          this.usuario = usuario;
          this.saldo = 0;
-         this.ativa = true;
 
      }
      public Usuario getUsuario(){
@@ -33,11 +32,10 @@ public class Conta {
      }
 
      public boolean sacar(double saque){
-        if(saque <=0 ){
+        if(saque <= 0){
             System.out.println("Valor inválido.");
             return false;
         }else if(saque > getSaldo()){
-
             System.out.println("Saldo insuficiente");
             return false;
         }else{
@@ -48,7 +46,7 @@ public class Conta {
      }
 
      public boolean transferir( Conta destino, double valor){
-        if(valor <=0 ){
+        if(valor <= 0){
             System.out.println("Erro: Valor invalido");
             return false;
         }else if(valor > this.saldo){
