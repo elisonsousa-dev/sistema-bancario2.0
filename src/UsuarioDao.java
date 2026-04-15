@@ -33,15 +33,14 @@ public class UsuarioDao {
             bus.setString(1,cpf);
             bus.setString(2,senha);
 
-            ResultSet rs = bus.executeQuery();
+            ResultSet log = bus.executeQuery();
 
-
-            if(rs.next()){
+            if(log.next()){
                 Usuario user = new Usuario();
 
-                  user.setNome(rs.getString("nome"));
-                  user.setCpf(rs.getString("cpf"));
-                  user.setSenha(rs.getString("senha"));
+                  user.setNome(log.getString("nome"));
+                  user.setCpf(log.getString("cpf"));
+                  user.setSenha(log.getString("senha"));
 
                   return user;
             }
@@ -205,7 +204,7 @@ public class UsuarioDao {
                 System.out.println("Conta: "+ nome);
                 System.out.println("CPF: "+ cpf);
                 System.out.println("Saldo: R$ "+ saldo);
-                System.out.println("-------------------------");
+                System.out.println("==========================");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -221,6 +220,8 @@ public class UsuarioDao {
 
         Boolean dep = depositar(destino, valor);
 
+
+
         if(!dep){
             return false;
         }
@@ -230,17 +231,18 @@ public class UsuarioDao {
         String sql = "select * from dados where cpf = ?";
 
        try {
-           PreparedStatement bus = Conexao.getConexao().prepareStatement(sql);
-             bus.setString(1,cpf);
+           PreparedStatement buscc = Conexao.getConexao().prepareStatement(sql);
+             buscc.setString(1,cpf);
 
-           ResultSet rs = bus.executeQuery();
+           ResultSet rs = buscc.executeQuery();
 
            if(rs.next()){
               String nome = rs.getString("nome");
               String Cpf = rs.getString("cpf");
-
+               System.out.println("========================");
                System.out.println("Nome: "+ nome);
                System.out.println("CPF: "+Cpf);
+               System.out.println("========================");
 
            }
        } catch (SQLException e) {
