@@ -2,6 +2,7 @@ void main() {
     Scanner scanner = new Scanner(System.in);
     DadosDoUsuario dados = new DadosDoUsuario();
     UsuarioDao dao = new UsuarioDao();
+    List<Usuario> usarios = dao.listaUsuario();
     Validacao Validador = new Validacao();
     Banco banco = new Banco();
 
@@ -22,7 +23,8 @@ void main() {
         System.out.println("=| [7] Lista de Usuarios     |=");
         System.out.println("=| [8] Buscar Usuario        |=");
         System.out.println("=| [9] Login                 |=");
-        System.out.println("=| [10] Sair                 |=");
+        System.out.println("=| [10] Excluir Conta        |=");
+        System.out.println("=| [11] Sair                 |=");
         System.out.println("=|===========================|=");
         System.out.print("Opcao: ");
         try {
@@ -81,7 +83,8 @@ void main() {
                      }
 
                  } while (!cpfValido);
-             banco.buscarConta(busCpf);
+            dao.verSaldo(busCpf);
+
          break;
       case 3:
           String depCpf;
@@ -110,17 +113,15 @@ void main() {
               }
           }while (valor <= 0);
            //
-           Conta depositar = banco.getConta(depCpf);
-
-           dao.depositar(depCpf, valor);
+           Usuario depositar = dao.buscarConta(depCpf);
 
             if(depositar != null){
-                validar = depositar.depositar(valor);
+                validar = dao.depositar(depCpf, valor);
                if(!validar){
                    System.out.println("Valor inválido");
                }else{
                    System.out.println("Deposito Realizado com sucesso");
-                   System.out.println("Depositado: "+depositar.getUsuario());
+                   System.out.println("Depositado: "+depositar.getNome());
                }
             }else{
                 System.out.println("Conta não encontrada");
@@ -155,19 +156,15 @@ void main() {
                   scanner.nextLine();
               }
           }while (sacValor <= 0);
-          Conta contaUsuario = banco.getConta(sacCpf);
-          dao.sacar(sacCpf, sacValor);
+          Usuario contaUsuario = dao.buscarConta(sacCpf);
+
 
           if(contaUsuario == null){
               System.out.println("Conta não encontrada");
 
-          }else if(sacValor > contaUsuario.getSaldo()){
-              System.out.println("Erro: Saldo insuficiente");
-
           }else {
-              //System.out.println("Usuário: "+contaUsuario.getUsuario());
-              contaUsuario.sacar(sacValor);
-              System.out.println("Saque efetuado com sucesso");
+              dao.sacar(sacCpf, sacValor);
+              System.out.println("Conta: "+contaUsuario.getNome());
           }
 
          break;
@@ -206,14 +203,21 @@ void main() {
                     scanner.nextLine();
                 }
             }while (trsValor <= 0);
-          banco.transferir(origem , destino , trsValor);
+          //banco.transferir(origem , destino , trsValor);
+          dao.transferir(origem, destino, trsValor);
 
        break;
          case 6:
-             banco.listaDeContas();
+             //banco.listaDeContas();
+             dao.ListaContas();
              break;
          case 7:
-             dados.listaDeusuario();
+            // dados.listaDeusuario();
+             for(Usuario us : usarios){
+                 System.out.println("Usuario: "+ us.getNome());
+                 System.out.println("CPF: "+ us.getCpf());
+                 System.out.println("----------------------");
+             }
              break;
          case 8:
              String logCpf;
@@ -228,7 +232,8 @@ void main() {
                      System.out.println("CPF inválido! Digite o formato correto.");
                  }
              }while (!cpfValido);
-             dados.buscarUsuario(logCpf);
+            // dados.buscarUsuario(logCpf);
+             dao.buscarConts(logCpf);
              break;
 
          case 9:
@@ -266,9 +271,17 @@ void main() {
                 }
              break;
          case 10:
+             scanner.nextLine();
+             System.out.println("Digite seu CPF: ");
+            String delCpf = scanner.nextLine();
+             System.out.println("Senha: ");
+            String delSenha = scanner.nextLine();
+            dao.delete(delCpf,delSenha);
+             break;
+         case 11:
              System.out.println("Saindo...");
              break;
      }
-    }while (opcao != 10);
+    }while (opcao != 11);
 
 }
