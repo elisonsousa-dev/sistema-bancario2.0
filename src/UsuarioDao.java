@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDao {
-    public void cadastrar(Usuario usuario, Conta conta){
+    public void cadastrar(Usuario usuario){
         String sql = "insert into dados (nome, cpf, senha, saldo) values (?, ?, ?, ?)";
 
         try {
@@ -16,7 +16,7 @@ public class UsuarioDao {
             cad.setString(1,usuario.getNome());
             cad.setString(2,usuario.getCpf());
             cad.setString(3,usuario.getSenha());
-            cad.setDouble(4,conta.getSaldo());
+            cad.setDouble(4,usuario.getSaldo());
 
             cad.execute();
             cad.close();

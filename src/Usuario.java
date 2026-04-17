@@ -2,6 +2,11 @@ public class Usuario {
     private String nome;
     private String cpf;
     private String senha;
+    private double saldo;
+
+    public double getSaldo(){
+        return saldo;
+    }
 
     public String getNome(){
         return nome;
