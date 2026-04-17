@@ -134,9 +134,10 @@ public class UsuarioDao {
             if(ex.next()){
                 Double saldo = ex.getDouble("saldo");
                 String nome = ex.getString("nome");
-
+                System.out.println("======================");
                 System.out.println("Usuário: "+ nome);
                 System.out.println("Saldo: R$"+ saldo);
+                System.out.println("======================");
             }
 
         } catch (SQLException e) {
@@ -155,7 +156,7 @@ public class UsuarioDao {
            int linha = del.executeUpdate();
 
            if(linha > 0){
-               System.out.println("Conta excluida!");
+               System.out.println("Conta excluída! Voltando ao inicio...");
            }else{
                System.out.println("Não foi possivel excluir sua conta!");
            }
