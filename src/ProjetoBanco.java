@@ -5,13 +5,14 @@ void main() {
     Validacao Validador = new Validacao();
     Usuario loginUsuario = null;
     boolean logado = false;
+    boolean sistemaAtivo = true;
     boolean senhaValida;
     boolean cpfValido;
     boolean validar;
     int opcao;
     int opcao1;
 
-    while(true) {
+    while (sistemaAtivo) {
 
         while (loginUsuario == null) {
             System.out.println("=|===========================|=");
@@ -44,14 +45,18 @@ void main() {
                             cpfValido = Validador.validarCPF(cpf);
                             if (!cpfValido) {
                                 System.out.println("CPF inválido! Digite o formato correto");
+                            } else if (dao.cpfExist(cpf)) {
+                                System.out.println("CPF ja cadastrado!");
                             }
-                        } while (!cpfValido);
+                        } while (!cpfValido || dao.cpfExist(cpf));
                         do {
                             System.out.print("Digite uma senha: ");
                             senha = scanner.nextLine();
                             senhaValida = Validador.validarSenha(senha);
                             if (!senhaValida) {
                                 System.out.println("Senha não pode ser vazia!");
+                            } else {
+                                System.out.println("CPF cadastrado!");
                             }
                         } while (!senhaValida);
 
@@ -264,19 +269,17 @@ void main() {
                     if (valid.equalsIgnoreCase("S")) {
                         dao.delete(loginUsuario.getCpf(), delSenha);
                         loginUsuario = null;
-                        logado = false;
+                        sistemaAtivo = true;
                         opcao = 9;
 
                     }
 
                     break;
                 case 9:
-                        System.out.println("Saindo...");
+                    System.out.println("Saindo...");
+                    sistemaAtivo = false;
                     break;
             }
         } while (opcao != 9);
     }
-
-
-
 }

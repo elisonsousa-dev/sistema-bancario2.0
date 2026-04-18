@@ -250,5 +250,23 @@ public class UsuarioDao {
            throw new RuntimeException(e);
        }
    }
+   public boolean cpfExist(String cpf){
+        String sql = "select * from dados where cpf = ?";
+
+       try {
+           PreparedStatement valid = Conexao.getConexao().prepareStatement(sql);
+
+           valid.setString(1,cpf);
+
+           ResultSet val = valid.executeQuery();
+
+           return val.next();
+
+       } catch (SQLException e) {
+           throw new RuntimeException(e);
+       }
+
+   }
+
 
 }
