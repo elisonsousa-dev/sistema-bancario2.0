@@ -22,7 +22,7 @@ public class UsuarioDao {
             cad.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
     public Usuario login(String cpf , String senha){
@@ -87,7 +87,7 @@ public class UsuarioDao {
                 System.out.println("Depositado");
                 return true;
             }else{
-                System.out.println("Erro");
+                System.out.println("O usuário não foi encontrado!");
                 return false;
             }
 
@@ -221,8 +221,6 @@ public class UsuarioDao {
 
         Boolean dep = depositar(destino, valor);
 
-
-
         if(!dep){
             return false;
         }
@@ -246,6 +244,10 @@ public class UsuarioDao {
                System.out.println("========================");
 
            }
+           if(!rs.next()){
+               System.out.println("Usuário não encontrado!");
+           }
+
        } catch (SQLException e) {
            throw new RuntimeException(e);
        }

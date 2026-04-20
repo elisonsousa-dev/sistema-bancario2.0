@@ -11,6 +11,7 @@ void main() {
     boolean validar;
     int opcao;
     int opcao1;
+    int proq = 0;
 
     while (sistemaAtivo) {
 
@@ -85,20 +86,31 @@ void main() {
 
                             if (!senhaValida) {
                                 System.out.println("Senha não pode ser vazia!");
-
+                                proq++;
                             }
                         } while (!senhaValida);
 
                         loginUsuario = dao.login(loginCpf, loginSenha);
 
-                        if (loginUsuario != null) {
-                            System.out.println("Bem-vindo, " + loginUsuario.getNome());
-                            System.out.println("Usuario: " + loginUsuario.getNome() + " | CPF: " + loginUsuario.getCpf());
-                            logado = true;
-                        } else {
-                            System.out.println("Sua conta não foi encontrada");
-                            System.out.println("Verifique se sua senha ou CPF estão corretos");
+                        if(proq == 3){
+                            System.out.println("--------------------------------------------------------------------");
+                            System.out.println("Limite de tentativas atingidas! Tente novamente após alguns minutos.");
+                            System.out.println("--------------------------------------------------------------------");
+                            proq = 0;
+                        }else{
+
+                            if (loginUsuario != null) {
+                                System.out.println("Bem-vindo, " + loginUsuario.getNome());
+                                System.out.println("Usuario: " + loginUsuario.getNome() + " | CPF: " + loginUsuario.getCpf());
+                                logado = true;
+                            } else {
+                                System.out.println("Sua conta não foi encontrada");
+                                System.out.println("Verifique se sua senha ou CPF estão corretos");
+                                proq++;
+                            }
+
                         }
+
                         break;
                 }
             } while (!logado);
