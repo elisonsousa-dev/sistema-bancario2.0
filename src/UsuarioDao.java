@@ -212,19 +212,19 @@ public class UsuarioDao {
         }
     }
     public boolean transferir(String origem , String destino , double valor){
+        Boolean dep = depositar(destino, valor);
+
+        if(!dep){
+            return true;
+        }
 
         Boolean saque = sacar(origem, valor);
 
         if(!saque){
-            return false;
-        }
-
-        Boolean dep = depositar(destino, valor);
-
-        if(!dep){
-            return false;
-        }
             return true;
+        }
+        return false;
+
     }
    public void buscarConts(String cpf){
         String sql = "select * from dados where cpf = ?";

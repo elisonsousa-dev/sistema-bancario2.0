@@ -116,7 +116,6 @@ void main() {
             } while (!logado);
         }
 
-
         do {
             System.out.println();
             System.out.println("=|===========================|=");
