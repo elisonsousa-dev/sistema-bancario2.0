@@ -22,7 +22,7 @@ Projeto desenvolvido em java com foco em Programação Orientada a Objetos.
 
 ## Observações
 Projeto em evolução, com melhorias planejadas em validação e tratamentos de erros.
-Em breve o sistema bancário 2.0 estara conectado a um banco de dados real.
+Em breve o sistema bancário 2.0 estara conectado a APIs REST, Spring Security, BCrypt (Criptografia de senha hash), JWT (Acesso com {token}).
 
 ## Atualizações:
 - Estrutura de dados atualizada
