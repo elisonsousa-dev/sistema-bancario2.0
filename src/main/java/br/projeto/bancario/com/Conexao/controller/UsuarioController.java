@@ -1,6 +1,8 @@
 package br.projeto.bancario.com.Conexao.controller;
 
+import br.projeto.bancario.com.Conexao.dto.DepRequestDTO;
 import br.projeto.bancario.com.Conexao.dto.LoginRequestDTO;
+import br.projeto.bancario.com.Conexao.dto.VerSaldoResponseDTO;
 import br.projeto.bancario.com.Conexao.model.Usuario;
 import br.projeto.bancario.com.Conexao.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +43,30 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
 
     }
     @PostMapping("/depositar")
-    public ResponseEntity<?> depositar(@RequestBody Usuario usuario){
+    public ResponseEntity<?> depositar(@RequestBody DepRequestDTO usuario){
 
         try {
-             service.depositar(usuario.getCpf(),usuario.getSaldo());
+            VerSaldoResponseDTO user = service.depositar(usuario.getSaldo());
 
-             return ResponseEntity.ok("Deposito efetuado com sucesso");
+             return ResponseEntity.ok("Deposito efetuado com sucesso para "+ user.getNome());
 
         }catch (RuntimeException e){
 
             return ResponseEntity.status(400).body(e.getMessage());
         }
+    }
+    @GetMapping("/saldo")
+    public ResponseEntity<?> verSaldo(){
+        try {
+            VerSaldoResponseDTO user = service.verSaldo();
+
+            return ResponseEntity.ok(user);
+
+        }catch (RuntimeException e){
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+
+
     }
 
 }

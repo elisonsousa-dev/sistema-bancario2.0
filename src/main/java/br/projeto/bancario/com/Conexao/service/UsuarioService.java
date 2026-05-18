@@ -1,8 +1,11 @@
 package br.projeto.bancario.com.Conexao.service;
 
 import br.projeto.bancario.com.Conexao.dto.LoginRequestDTO;
+import br.projeto.bancario.com.Conexao.dto.VerSaldoRequestDTO;
+import br.projeto.bancario.com.Conexao.dto.VerSaldoResponseDTO;
 import br.projeto.bancario.com.Conexao.model.Usuario;
 import br.projeto.bancario.com.Conexao.repository.RepositoryUser;
+import br.projeto.bancario.com.Conexao.util.SenhaUtil;
 import br.projeto.bancario.com.Conexao.util.Validacao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,8 @@ public class UsuarioService {
     private Validacao validar;
     @Autowired
     private RepositoryUser repo;
+    @Autowired
+    private VerSaldoRequestDTO validarUser;
 
 
     public void cadastrarUsuario(Usuario usuarios){
@@ -40,11 +45,12 @@ public class UsuarioService {
         if(user != null){
             throw new RuntimeException("Este usuário ja existe");
         }
+       String hash = SenhaUtil.gerarHash(usuarios.getSenha());
          Usuario usuario = new Usuario();
 
         usuario.setNome(usuarios.getNome());
         usuario.setCpf(usuarios.getCpf());
-        usuario.setSenha(usuarios.getSenha());
+        usuario.setSenha(hash);
 
         repo.save(usuario);
     }
@@ -62,11 +68,17 @@ public class UsuarioService {
         if(!validarSenha){
             throw new RuntimeException("A senha não pode ser vazia");
         }
-        System.out.println(usuario);
+
         Usuario user = repo.findByCpf(usuario.getCpf());
 
         if(user == null){
             throw new RuntimeException("O usuário não foi encontrado");
+        }
+
+        boolean validarHash = SenhaUtil.verificarHash(usuario.getSenha(),user.getSenha());
+
+        if(!validarHash){
+            throw new RuntimeException("senha incorreta");
         }
 
         LoginRequestDTO usuario1 = new LoginRequestDTO();
@@ -74,28 +86,48 @@ public class UsuarioService {
         usuario1.setNome(user.getNome());
         usuario1.setCpf(user.getCpf());
         usuario1.setSenha(user.getSenha());
+        validarUser.setCpf(user.getCpf());
 
         return usuario1;
+
     }
-    public void depositar(String cpf, double valor){
-        boolean validarCpf = validar.validarCPF(cpf);
+    public VerSaldoResponseDTO depositar(double valor){
 
-        if(!validarCpf){
-            throw new RuntimeException("CPF inválido");
-        }
-
-        Usuario user = repo.findByCpf(cpf);
+        Usuario user = repo.findByCpf(validarUser.getCpf());
 
         if(user == null){
-            throw new RuntimeException("Usuário não encontrado");
+            throw new RuntimeException("Faça login com sua conta ou cadastre-se");
         }
 
-        valor += user.getSaldo();
+        if(valor <= 0){
+            throw new RuntimeException("Valor inválido");
+        }
 
-       user.setSaldo(valor);
+          VerSaldoResponseDTO usuario = new VerSaldoResponseDTO();
 
+          usuario.setNome(user.getNome());
+          valor += user.getSaldo();
+          user.setSaldo(valor);
 
-        repo.save(user);
+           repo.save(user);
+
+       return usuario;
+    }
+
+    public VerSaldoResponseDTO verSaldo(){
+
+        Usuario user = repo.findByCpf(validarUser.getCpf());
+
+        if(user == null){
+            throw new RuntimeException("Faça login com sua conta ou cadastre-se");
+        }
+
+        VerSaldoResponseDTO usuario = new VerSaldoResponseDTO();
+
+        usuario.setNome(user.getNome());
+        usuario.setSaldo(user.getSaldo());
+
+        return usuario;
     }
 
 }
