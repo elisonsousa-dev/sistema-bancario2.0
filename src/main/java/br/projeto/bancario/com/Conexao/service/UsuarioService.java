@@ -113,7 +113,6 @@ public class UsuarioService {
 
        return usuario;
     }
-
     public VerSaldoResponseDTO verSaldo(){
 
         Usuario user = repo.findByCpf(validarUser.getCpf());
@@ -129,5 +128,60 @@ public class UsuarioService {
 
         return usuario;
     }
+    public void sacar(double valor){
+        Usuario user = repo.findByCpf(validarUser.getCpf());
+
+        if(user == null){
+            throw new RuntimeException("Faça login com sua conta ou cadastre-se");
+        }
+
+        if(valor > user.getSaldo()){
+            throw new RuntimeException("Saldo insuficiente");
+        }
+
+        if(valor <= 0){
+            throw new RuntimeException("Valor inválido");
+        }
+
+       valor = user.getSaldo() - valor;
+         user.setSaldo(valor);
+
+        repo.save(user);
+
+    }
+    public void transferir(String destino, double valor){
+
+        Usuario origem = repo.findByCpf(validarUser.getCpf());
+
+        if(origem == null){
+            throw new RuntimeException("Faça login com sua conta ou cadastre-se");
+        }
+          if(valor > origem.getSaldo()){
+              throw new RuntimeException("Saldo insuficiente");
+          }
+
+          if(valor <= 0){
+              throw new RuntimeException("Valor inválido");
+          }
+          valor = origem.getSaldo() - valor;
+          origem.setSaldo(valor);
+
+          repo.save(origem);
+
+        Usuario des = repo.findByCpf(destino);
+
+        if(des == null){
+            throw new RuntimeException("O usuário não foi encontrado");
+        }
+
+       double dp = des.getSaldo() + valor;
+        System.out.println(dp);
+        des.setSaldo(dp);
+
+        repo.save(des);
+
+
+    }
+
 
 }

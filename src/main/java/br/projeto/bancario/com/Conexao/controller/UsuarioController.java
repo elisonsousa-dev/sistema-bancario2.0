@@ -1,8 +1,6 @@
 package br.projeto.bancario.com.Conexao.controller;
 
-import br.projeto.bancario.com.Conexao.dto.DepRequestDTO;
-import br.projeto.bancario.com.Conexao.dto.LoginRequestDTO;
-import br.projeto.bancario.com.Conexao.dto.VerSaldoResponseDTO;
+import br.projeto.bancario.com.Conexao.dto.*;
 import br.projeto.bancario.com.Conexao.model.Usuario;
 import br.projeto.bancario.com.Conexao.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +64,27 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
             return ResponseEntity.status(401).body(e.getMessage());
         }
 
-
     }
+    @PostMapping("/sacar")
+   public ResponseEntity<?> sacar(@RequestBody SacarRequestDTO usuario){
+        try {
+            service.sacar(usuario.getValor());
+
+            return ResponseEntity.ok("Saque efetuado com sucesso");
+        }catch (RuntimeException e){
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+   }
+   @PostMapping("/transferir")
+    public ResponseEntity<?> transferir(@RequestBody TransferirRequestDTO usuario){
+        try {
+            service.transferir(usuario.getCpf(), usuario.getValor());
+
+            return ResponseEntity.ok("Transferencia efetuada com sucesso");
+        }catch (RuntimeException e){
+
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+   }
 
 }
