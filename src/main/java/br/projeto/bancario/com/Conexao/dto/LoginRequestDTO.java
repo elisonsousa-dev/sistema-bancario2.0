@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class LoginRequestDTO {
     private String nome;
     private String cpf;
-    private String senha;
+   private String token;
 
 }

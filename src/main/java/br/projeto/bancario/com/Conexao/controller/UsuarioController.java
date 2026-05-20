@@ -14,6 +14,7 @@ public class UsuarioController {
     private UsuarioService service;
 
 
+
     @PostMapping("/cadastro")
 public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
         try {
@@ -28,7 +29,7 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO usuario){
+    public ResponseEntity<?> login(@RequestBody Usuario usuario){
 
       try {
          LoginRequestDTO user = service.login(usuario);
@@ -41,10 +42,10 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
 
     }
     @PostMapping("/depositar")
-    public ResponseEntity<?> depositar(@RequestBody DepRequestDTO usuario){
+    public ResponseEntity<?> depositar(@RequestHeader("Authorization") String header, @RequestBody DepRequestDTO usuario){
 
         try {
-            VerSaldoResponseDTO user = service.depositar(usuario.getSaldo());
+            VerSaldoResponseDTO user = service.depositar(header,usuario.getSaldo());
 
              return ResponseEntity.ok("Deposito efetuado com sucesso para "+ user.getNome());
 
@@ -66,9 +67,9 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
 
     }
     @PostMapping("/sacar")
-   public ResponseEntity<?> sacar(@RequestBody SacarRequestDTO usuario){
+   public ResponseEntity<?> sacar(@RequestHeader("Authorization") String header, @RequestBody SacarRequestDTO usuario){
         try {
-            service.sacar(usuario.getValor());
+            service.sacar(header, usuario.getValor());
 
             return ResponseEntity.ok("Saque efetuado com sucesso");
         }catch (RuntimeException e){
