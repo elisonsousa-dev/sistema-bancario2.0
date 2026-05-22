@@ -1,6 +1,7 @@
 package br.projeto.bancario.com.Conexao.service;
 
 import br.projeto.bancario.com.Conexao.dto.LoginRequestDTO;
+import br.projeto.bancario.com.Conexao.dto.TransferirResponseDTO;
 import br.projeto.bancario.com.Conexao.dto.VerSaldoRequestDTO;
 import br.projeto.bancario.com.Conexao.dto.VerSaldoResponseDTO;
 import br.projeto.bancario.com.Conexao.model.Usuario;
@@ -131,9 +132,14 @@ public class UsuarioService {
 
        return usuario;
     }
-    public VerSaldoResponseDTO verSaldo(){
+    public VerSaldoResponseDTO verSaldo(String header){
+         String token = authUtil.getCpf(header);
 
-        Usuario user = repo.findByCpf(validarUser.getCpf());
+         if(token == null){
+             throw new RuntimeException("Token inválido");
+         }
+
+        Usuario user = repo.findByCpf(token);
 
         if(user == null){
             throw new RuntimeException("Faça login com sua conta ou cadastre-se");
@@ -148,8 +154,6 @@ public class UsuarioService {
     }
     public void sacar(String header, double valor){
         String token = authUtil.getCpf(header);
-
-        System.out.println(token);
 
         if(header.isEmpty()){
             throw new RuntimeException("Header não pode ser vazio!");
@@ -179,9 +183,14 @@ public class UsuarioService {
         repo.save(user);
 
     }
-    public void transferir(String destino, double valor){
+    public TransferirResponseDTO transferir(String header, String destino, double valor){
+       String token = authUtil.getCpf(header);
 
-        Usuario origem = repo.findByCpf(validarUser.getCpf());
+       if(token == null){
+           throw new RuntimeException("Token inválido");
+        }
+
+        Usuario origem = repo.findByCpf(token);
 
         if(origem == null){
             throw new RuntimeException("Faça login com sua conta ou cadastre-se");
@@ -193,10 +202,6 @@ public class UsuarioService {
           if(valor <= 0){
               throw new RuntimeException("Valor inválido");
           }
-          valor = origem.getSaldo() - valor;
-          origem.setSaldo(valor);
-
-          repo.save(origem);
 
         Usuario des = repo.findByCpf(destino);
 
@@ -204,11 +209,25 @@ public class UsuarioService {
             throw new RuntimeException("O usuário não foi encontrado");
         }
 
+        if(destino.equals(origem.getCpf())){
+            throw new RuntimeException("Transferencia inválida");
+        }
+
+        double retirada = origem.getSaldo() - valor;
+        origem.setSaldo(retirada);
+
+        repo.save(origem);
+
        double dp = des.getSaldo() + valor;
-        System.out.println(dp);
         des.setSaldo(dp);
 
         repo.save(des);
+        TransferirResponseDTO usuario = new TransferirResponseDTO();
+
+        usuario.setNome(des.getNome());
+
+        return usuario;
+
 
 
     }

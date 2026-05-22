@@ -55,9 +55,9 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
         }
     }
     @GetMapping("/saldo")
-    public ResponseEntity<?> verSaldo(){
+    public ResponseEntity<?> verSaldo(@RequestHeader("Authorization") String header){
         try {
-            VerSaldoResponseDTO user = service.verSaldo();
+            VerSaldoResponseDTO user = service.verSaldo(header);
 
             return ResponseEntity.ok(user);
 
@@ -77,11 +77,11 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
         }
    }
    @PostMapping("/transferir")
-    public ResponseEntity<?> transferir(@RequestBody TransferirRequestDTO usuario){
+    public ResponseEntity<?> transferir(@RequestHeader("Authorization") String header, @RequestBody TransferirRequestDTO usuario){
         try {
-            service.transferir(usuario.getCpf(), usuario.getValor());
+            TransferirResponseDTO user = service.transferir(header, usuario.getCpf(), usuario.getValor());
 
-            return ResponseEntity.ok("Transferencia efetuada com sucesso");
+            return ResponseEntity.ok("Transferencia efetuada com sucesso para "+user.getNome());
         }catch (RuntimeException e){
 
             return ResponseEntity.status(401).body(e.getMessage());
