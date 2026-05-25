@@ -1,9 +1,6 @@
 package br.projeto.bancario.com.Conexao.service;
 
-import br.projeto.bancario.com.Conexao.dto.LoginRequestDTO;
-import br.projeto.bancario.com.Conexao.dto.TransferirResponseDTO;
-import br.projeto.bancario.com.Conexao.dto.VerSaldoRequestDTO;
-import br.projeto.bancario.com.Conexao.dto.VerSaldoResponseDTO;
+import br.projeto.bancario.com.Conexao.dto.*;
 import br.projeto.bancario.com.Conexao.model.Usuario;
 import br.projeto.bancario.com.Conexao.repository.RepositoryUser;
 import br.projeto.bancario.com.Conexao.util.AuthUtil;
@@ -12,6 +9,8 @@ import br.projeto.bancario.com.Conexao.util.TokenUtil;
 import br.projeto.bancario.com.Conexao.util.Validacao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -228,7 +227,17 @@ public class UsuarioService {
 
         return usuario;
 
+    }
 
+    public List<ListaUsuariosDTO> lista(){
+        return repo.findAll().stream().map(usuario -> {
+            ListaUsuariosDTO usuarios = new ListaUsuariosDTO();
+            usuarios.setId(usuario.getId());
+            usuarios.setNome(usuario.getNome());
+            usuarios.setCpf(usuario.getCpf());
+            usuarios.setSaldo(usuario.getSaldo());
+            return usuarios;
+        }).toList();
 
     }
 

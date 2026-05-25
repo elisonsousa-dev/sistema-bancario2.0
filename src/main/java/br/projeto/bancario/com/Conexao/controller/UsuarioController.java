@@ -87,5 +87,9 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
             return ResponseEntity.status(401).body(e.getMessage());
         }
    }
+   @GetMapping("/lista")
+   public ResponseEntity<?> lista(){
+        return ResponseEntity.ok(service.lista());
+   }
 
 }
