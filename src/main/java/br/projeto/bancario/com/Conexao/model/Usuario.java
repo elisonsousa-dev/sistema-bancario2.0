@@ -1,15 +1,14 @@
 package br.projeto.bancario.com.Conexao.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
 @Entity
+@Component
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,5 +18,10 @@ public class Usuario {
     private String cpf;
     private String senha;
     private double saldo;
+    @Enumerated(EnumType.STRING)
+    private Roles roles;
 
+    public enum Roles{
+        CEO,USER,ADMIN
+    }
 }

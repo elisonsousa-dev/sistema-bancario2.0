@@ -23,4 +23,13 @@ public class AuthUtil {
 
         return tokenUtil.validarToken(token);
     }
+    public String getRoles(String header){
+        String token = getToken(header);
+
+        if(token == null){
+            return null;
+        }
+
+        return tokenUtil.validarRoles(token);
+    }
 }

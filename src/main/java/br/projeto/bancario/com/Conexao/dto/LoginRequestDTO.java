@@ -1,5 +1,6 @@
 package br.projeto.bancario.com.Conexao.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 public class LoginRequestDTO {
     private String nome;
     private String cpf;
-   private String token;
+    @JsonIgnore
+    private String token;
+    private String user;
 
 }

@@ -7,6 +7,7 @@ import br.projeto.bancario.com.Conexao.util.AuthUtil;
 import br.projeto.bancario.com.Conexao.util.SenhaUtil;
 import br.projeto.bancario.com.Conexao.util.TokenUtil;
 import br.projeto.bancario.com.Conexao.util.Validacao;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class UsuarioService {
     private AuthUtil authUtil;
 
 
-    public void cadastrarUsuario(Usuario usuarios){
+    public void cadastrarUsuario(UsuarioRequestDTO usuarios){
 
         boolean validarNome = validar.validarNome(usuarios.getNome());
 
@@ -51,18 +52,19 @@ public class UsuarioService {
         if(user != null){
             throw new RuntimeException("Este usuário ja existe");
         }
+        Usuario usuario = new Usuario();
+
        String hash = SenhaUtil.gerarHash(usuarios.getSenha());
-         Usuario usuario = new Usuario();
 
         usuario.setNome(usuarios.getNome());
         usuario.setCpf(usuarios.getCpf());
+        usuario.setRoles(Usuario.Roles.ADMIN);
         usuario.setSenha(hash);
 
         repo.save(usuario);
     }
 
     public LoginRequestDTO login(Usuario usuario){
-
         boolean validarCpf = validar.validarCPF(usuario.getCpf());
 
         if(!validarCpf){
@@ -87,20 +89,21 @@ public class UsuarioService {
             throw new RuntimeException("senha incorreta");
         }
 
-        String token = tokenUtil.gerarToken(user.getCpf());
+        String token = tokenUtil.gerarToken(user.getCpf(),String.valueOf(user.getRoles()));
 
         LoginRequestDTO usuario1 = new LoginRequestDTO();
 
         usuario1.setNome(user.getNome());
         usuario1.setCpf(user.getCpf());
+        usuario.setNome(user.getNome());
         usuario1.setToken(token);
+        usuario1.setUser(String.valueOf(user.getRoles()));
         validarUser.setCpf(user.getCpf());
-
+        System.out.println(token);
         return usuario1;
 
     }
     public VerSaldoResponseDTO depositar(String header, double valor){
-
          String token = authUtil.getCpf(header);
 
          if(header.isEmpty()){
@@ -229,17 +232,93 @@ public class UsuarioService {
 
     }
 
-    public List<ListaUsuariosDTO> lista(){
+    public List<ListaUsuariosDTO> lista(String header){
+        String token = authUtil.getCpf(header);
+
+        if(token == null){
+            throw new RuntimeException("Token inválido");
+        }
+
+        Usuario user = repo.findByCpf(token);
+
+        if(user == null){
+            throw new RuntimeException("O usuário não foi encontrado");
+        }
+         String roles = authUtil.getRoles(header);
+
+        System.out.println(roles);
+        if(roles == null){
+            throw  new RuntimeException("token inválido 'roles' ");
+        }
+
+        if(!Usuario.Roles.ADMIN.name().equals(roles)){
+            throw new RuntimeException("Acesso negado");
+        }
+
         return repo.findAll().stream().map(usuario -> {
             ListaUsuariosDTO usuarios = new ListaUsuariosDTO();
             usuarios.setId(usuario.getId());
             usuarios.setNome(usuario.getNome());
             usuarios.setCpf(usuario.getCpf());
             usuarios.setSaldo(usuario.getSaldo());
+            usuarios.setUser(String.valueOf(usuario.getRoles()));
             return usuarios;
         }).toList();
 
     }
+    public void delete(String header){
+        String token = authUtil.getCpf(header);
 
+        if(token == null){
+            throw new RuntimeException("O usuário não foi encontrado");
+        }
+        Usuario user = repo.findByCpf(token);
+
+        if(user == null){
+            throw new RuntimeException("O usuário não foi encontrado no banco de dados");
+        }
+        String roles = authUtil.getRoles(header);
+
+        if(!Usuario.Roles.USER.name().equals(roles)){
+            throw new RuntimeException("Esta conta não pode ser deletada");
+        }
+
+        repo.delete(user);
+    }
+
+    public void update(String token, SenhaRequestDTO dados){
+        String validarToken = authUtil.getCpf(token);
+
+        if(validarToken == null){
+            throw new RuntimeException("Token inválido");
+        }
+
+        Usuario user = repo.findByCpf(validarToken);
+
+        if(user == null){
+            throw new RuntimeException("O Usuário não foi encontrado");
+        }
+
+        if(!BCrypt.checkpw(dados.getSenhaAtual(),user.getSenha())){
+            throw new RuntimeException("Senha atual incorreta");
+        }
+
+        boolean validarNovaSenha = validar.validarSenha(dados.getNovaSenha());
+
+        if(!validarNovaSenha){
+            throw new RuntimeException("Sua nova senha não pode ser vazia");
+        }
+
+        if(BCrypt.checkpw(dados.getNovaSenha(), user.getSenha())){
+            throw new RuntimeException("Sua nova senha não pode ser igual a sua atual");
+        }
+
+        String hash = SenhaUtil.gerarHash(dados.getNovaSenha());
+
+        user.setSenha(hash);
+
+        repo.save(user);
+
+    }
 
 }

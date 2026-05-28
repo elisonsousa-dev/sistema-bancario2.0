@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
@@ -14,9 +18,8 @@ public class UsuarioController {
     private UsuarioService service;
 
 
-
     @PostMapping("/cadastro")
-public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
+public ResponseEntity<?> cadastro(@RequestBody UsuarioRequestDTO usuario){
         try {
             service.cadastrarUsuario(usuario);
 
@@ -32,8 +35,15 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
     public ResponseEntity<?> login(@RequestBody Usuario usuario){
 
       try {
-         LoginRequestDTO user = service.login(usuario);
-           return ResponseEntity.ok(user);
+          Map<String, Object> response = new LinkedHashMap<>();
+
+          LoginRequestDTO user = service.login(usuario);
+
+          response.put("mensagem", "Bem-Vindo, "+usuario.getNome());
+          response.put("status", 200);
+          response.put("dados", user);
+
+           return ResponseEntity.ok(response);
 
       }catch (RuntimeException e){
 
@@ -88,8 +98,40 @@ public ResponseEntity<?> cadastro(@RequestBody Usuario usuario){
         }
    }
    @GetMapping("/lista")
-   public ResponseEntity<?> lista(){
-        return ResponseEntity.ok(service.lista());
+   public ResponseEntity<?> lista(@RequestHeader("Authorization") String header){
+        try {
+            List<ListaUsuariosDTO> users = service.lista(header);
+
+            return ResponseEntity.ok(users);
+        }catch (RuntimeException e){
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
    }
+   @DeleteMapping("/delete")
+   public ResponseEntity<?> delete(@RequestHeader("Authorization") String header){
+        try {
+
+            service.delete(header);
+
+            return ResponseEntity.ok("Conta excluida com sucesso");
+
+        }catch (RuntimeException e){
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+   }
+
+   @PutMapping("/update")
+   public ResponseEntity<?> update(@RequestHeader("Authorization") String header, @RequestBody SenhaRequestDTO usuario){
+        try {
+            service.update(header, usuario);
+
+            return ResponseEntity.status(200).body("Senha atualizada com sucesso");
+
+        }catch (RuntimeException e){
+
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+   }
+
 
 }

@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class ListaUsuariosDTO {
-    private Long id;
-    private String nome;
-    private String cpf;
-    private double saldo;
-    private String user;
+public class SenhaRequestDTO {
+    private String senhaAtual;
+    private String novaSenha;
 }
