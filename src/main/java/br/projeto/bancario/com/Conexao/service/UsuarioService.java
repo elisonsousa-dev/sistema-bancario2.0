@@ -99,7 +99,6 @@ public class UsuarioService {
         usuario1.setToken(token);
         usuario1.setUser(String.valueOf(user.getRoles()));
         validarUser.setCpf(user.getCpf());
-        System.out.println(token);
         return usuario1;
 
     }
@@ -286,14 +285,14 @@ public class UsuarioService {
         repo.delete(user);
     }
 
-    public void update(String token, SenhaRequestDTO dados){
-        String validarToken = authUtil.getCpf(token);
+    public void update(String header, SenhaRequestDTO dados){
+        String token = authUtil.getCpf(header);
 
-        if(validarToken == null){
+        if(token == null){
             throw new RuntimeException("Token inválido");
         }
 
-        Usuario user = repo.findByCpf(validarToken);
+        Usuario user = repo.findByCpf(token);
 
         if(user == null){
             throw new RuntimeException("O Usuário não foi encontrado");
@@ -318,6 +317,54 @@ public class UsuarioService {
         user.setSenha(hash);
 
         repo.save(user);
+
+    }
+    public void getCargo(String header, String senha,GetCargoRequestDTO dados){
+        String token = authUtil.getCpf(header);
+
+        if(token == null){
+            throw new RuntimeException("Token inválido");
+
+        }
+        Usuario user = repo.findByCpf(token);
+
+        if(user == null){
+            throw new RuntimeException("O usuário não foi encontrado");
+        }
+
+        String role = authUtil.getRoles(header);
+
+        if(role == null){
+            throw new RuntimeException("Token inválido 'role'");
+        }
+
+        if(!Usuario.Roles.CEO.name().equals(role)){
+            throw new RuntimeException("Você não tem autorização para acessa essa rota!");
+        }
+
+        boolean ok = SenhaUtil.verificarHash(senha, user.getSenha());
+
+        if(!ok){
+            throw new RuntimeException("Senha incorreta");
+        }
+
+        Usuario usuarioAl = repo.findByCpf(dados.getCpf());
+
+        if(usuarioAl == null){
+            throw new RuntimeException("O user não foi encontrado");
+        }
+        String roles = dados.getCargo();
+
+
+        if(usuarioAl.getRoles() == Usuario.Roles.valueOf(roles)){
+            throw new RuntimeException("O usuário já possui esse cargo");
+        }
+
+        roles = roles.toLowerCase();
+
+        usuarioAl.setRoles(Usuario.Roles.valueOf(roles));
+
+        repo.save(usuarioAl);
 
     }
 
