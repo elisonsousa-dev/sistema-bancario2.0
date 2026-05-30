@@ -319,7 +319,7 @@ public class UsuarioService {
         repo.save(user);
 
     }
-    public void getCargo(String header, String senha,GetCargoRequestDTO dados){
+    public void getCargo(String header,GetCargoRequestDTO dados){
         String token = authUtil.getCpf(header);
 
         if(token == null){
@@ -342,7 +342,7 @@ public class UsuarioService {
             throw new RuntimeException("Você não tem autorização para acessa essa rota!");
         }
 
-        boolean ok = SenhaUtil.verificarHash(senha, user.getSenha());
+        boolean ok = SenhaUtil.verificarHash(dados.getSenha(), user.getSenha());
 
         if(!ok){
             throw new RuntimeException("Senha incorreta");
@@ -360,7 +360,7 @@ public class UsuarioService {
             throw new RuntimeException("O usuário já possui esse cargo");
         }
 
-        roles = roles.toLowerCase();
+        roles = roles.toUpperCase();
 
         usuarioAl.setRoles(Usuario.Roles.valueOf(roles));
 

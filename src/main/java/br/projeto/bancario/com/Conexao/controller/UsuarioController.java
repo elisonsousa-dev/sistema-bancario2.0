@@ -132,6 +132,16 @@ public ResponseEntity<?> cadastro(@RequestBody UsuarioRequestDTO usuario){
             return ResponseEntity.status(401).body(e.getMessage());
         }
    }
+   @PutMapping("/set")
+   public ResponseEntity<?> setCargo(@RequestHeader("Authorization") String header,@RequestBody GetCargoRequestDTO dados){
+        try {
+            service.getCargo(header, dados);
+
+            return ResponseEntity.status(200).body("Cargo setado");
+        }catch (RuntimeException e){
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+   }
 
 
 }
