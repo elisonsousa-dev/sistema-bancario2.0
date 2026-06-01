@@ -46,8 +46,11 @@ public ResponseEntity<?> cadastro(@RequestBody UsuarioRequestDTO usuario){
            return ResponseEntity.ok(response);
 
       }catch (RuntimeException e){
+          Map<String, Object> response = new LinkedHashMap<>();
 
-          return ResponseEntity.status(400).body(e.getMessage());
+             response.put("mensagem", e.getMessage());
+
+          return ResponseEntity.status(400).body(response);
       }
 
     }
@@ -55,91 +58,143 @@ public ResponseEntity<?> cadastro(@RequestBody UsuarioRequestDTO usuario){
     public ResponseEntity<?> depositar(@RequestHeader("Authorization") String header, @RequestBody DepRequestDTO usuario){
 
         try {
+            Map<String, Object> response = new LinkedHashMap<>();
             VerSaldoResponseDTO user = service.depositar(header,usuario.getSaldo());
 
-             return ResponseEntity.ok("Deposito efetuado com sucesso para "+ user.getNome());
+                response.put("mensagem", "Deposito efetuado com sucesso para "+ user.getNome());
+
+             return ResponseEntity.ok(response);
 
         }catch (RuntimeException e){
+            Map<String, Object> response = new LinkedHashMap<>();
 
-            return ResponseEntity.status(400).body(e.getMessage());
+            response.put("mensagem", e.getMessage());
+
+            return ResponseEntity.status(400).body(response);
         }
     }
     @GetMapping("/saldo")
     public ResponseEntity<?> verSaldo(@RequestHeader("Authorization") String header){
         try {
+            Map<String, Object> response = new LinkedHashMap<>();
             VerSaldoResponseDTO user = service.verSaldo(header);
 
-            return ResponseEntity.ok(user);
+            response.put("dados", user);
+
+            return ResponseEntity.ok(response);
 
         }catch (RuntimeException e){
-            return ResponseEntity.status(401).body(e.getMessage());
+            Map<String, Object> response = new LinkedHashMap<>();
+
+            response.put("mensagem", e.getMessage());
+
+            return ResponseEntity.status(401).body(response);
         }
 
     }
     @PostMapping("/sacar")
    public ResponseEntity<?> sacar(@RequestHeader("Authorization") String header, @RequestBody SacarRequestDTO usuario){
         try {
+            Map<String, Object> response = new LinkedHashMap<>();
             service.sacar(header, usuario.getValor());
 
-            return ResponseEntity.ok("Saque efetuado com sucesso");
+            response.put("mensagem", "Saque efetuado com sucesso");
+            return ResponseEntity.ok(response);
+
         }catch (RuntimeException e){
-            return ResponseEntity.status(401).body(e.getMessage());
+            Map<String, Object> response = new LinkedHashMap<>();
+
+            response.put("mensagem", e.getMessage());
+
+            return ResponseEntity.status(401).body(response);
         }
    }
    @PostMapping("/transferir")
     public ResponseEntity<?> transferir(@RequestHeader("Authorization") String header, @RequestBody TransferirRequestDTO usuario){
         try {
+            Map<String, Object> response = new LinkedHashMap<>();
             TransferirResponseDTO user = service.transferir(header, usuario.getCpf(), usuario.getValor());
 
-            return ResponseEntity.ok("Transferencia efetuada com sucesso para "+user.getNome());
+            response.put("mensagem","Transferencia efetuada com sucesso para "+user.getNome());
+            return ResponseEntity.ok(response);
         }catch (RuntimeException e){
+            Map<String, Object> response = new LinkedHashMap<>();
 
-            return ResponseEntity.status(401).body(e.getMessage());
+            response.put("mensagem", e.getMessage());
+
+            return ResponseEntity.status(401).body(response);
         }
    }
    @GetMapping("/lista")
    public ResponseEntity<?> lista(@RequestHeader("Authorization") String header){
         try {
+            Map<String, Object> response = new LinkedHashMap<>();
             List<ListaUsuariosDTO> users = service.lista(header);
 
-            return ResponseEntity.ok(users);
+            response.put("dados", users);
+
+            return ResponseEntity.ok(response);
         }catch (RuntimeException e){
-            return ResponseEntity.status(401).body(e.getMessage());
+            Map<String, Object> response = new LinkedHashMap<>();
+
+            response.put("mensagem", e.getMessage());
+
+            return ResponseEntity.status(401).body(response);
         }
    }
    @DeleteMapping("/delete")
    public ResponseEntity<?> delete(@RequestHeader("Authorization") String header){
         try {
-
+            Map<String, Object> response = new LinkedHashMap<>();
             service.delete(header);
 
-            return ResponseEntity.ok("Conta excluida com sucesso");
+            response.put("mensagem","Conta excluida com sucesso");
+
+            return ResponseEntity.ok(response);
 
         }catch (RuntimeException e){
-            return ResponseEntity.status(401).body(e.getMessage());
+            Map<String, Object> response = new LinkedHashMap<>();
+
+            response.put("mensagem", e.getMessage());
+
+            return ResponseEntity.status(401).body(response);
         }
    }
 
    @PutMapping("/update")
    public ResponseEntity<?> update(@RequestHeader("Authorization") String header, @RequestBody SenhaRequestDTO usuario){
         try {
+            Map<String, Object> response = new LinkedHashMap<>();
             service.update(header, usuario);
 
-            return ResponseEntity.status(200).body("Senha atualizada com sucesso");
+            response.put("mensagem", "Senha atualizada com sucesso");
+
+            return ResponseEntity.status(200).body(response);
 
         }catch (RuntimeException e){
 
-            return ResponseEntity.status(401).body(e.getMessage());
+            Map<String, Object> response = new LinkedHashMap<>();
+
+            response.put("mensagem", e.getMessage());
+
+            return ResponseEntity.status(401).body(response);
         }
    }
    @PutMapping("/set")
    public ResponseEntity<?> setCargo(@RequestHeader("Authorization") String header,@RequestBody GetCargoRequestDTO dados){
         try {
+            Map<String, Object> response = new LinkedHashMap<>();
             service.getCargo(header, dados);
 
-            return ResponseEntity.status(200).body("Cargo setado");
+            response.put("mensagem", "Cargo setado");
+
+            return ResponseEntity.status(200).body(response);
         }catch (RuntimeException e){
-            return ResponseEntity.status(401).body(e.getMessage());
+            Map<String, Object> response = new LinkedHashMap<>();
+
+            response.put("mensagem", e.getMessage());
+
+            return ResponseEntity.status(401).body(response);
         }
    }
 

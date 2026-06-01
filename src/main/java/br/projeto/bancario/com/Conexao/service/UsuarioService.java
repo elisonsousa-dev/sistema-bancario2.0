@@ -245,12 +245,11 @@ public class UsuarioService {
         }
          String roles = authUtil.getRoles(header);
 
-        System.out.println(roles);
         if(roles == null){
             throw  new RuntimeException("token inválido 'roles' ");
         }
 
-        if(!Usuario.Roles.ADMIN.name().equals(roles)){
+        if(!Usuario.Roles.ADMIN.name().equals(roles) && !Usuario.Roles.CEO.name().equals(roles)){
             throw new RuntimeException("Acesso negado");
         }
 
