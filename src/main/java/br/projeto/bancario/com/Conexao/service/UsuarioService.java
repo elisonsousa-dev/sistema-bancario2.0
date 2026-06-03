@@ -20,7 +20,7 @@ public class UsuarioService {
     @Autowired
     private RepositoryUser repo;
     @Autowired
-    private VerSaldoRequestDTO validarUser;
+    private TransacaoResponseDTO transacaoResponseDTO;
     @Autowired
     private TokenUtil tokenUtil;
     @Autowired
@@ -98,7 +98,7 @@ public class UsuarioService {
         usuario.setNome(user.getNome());
         usuario1.setToken(token);
         usuario1.setUser(String.valueOf(user.getRoles()));
-        validarUser.setCpf(user.getCpf());
+        //validarUser.setCpf(user.getCpf());
         return usuario1;
 
     }
@@ -130,6 +130,12 @@ public class UsuarioService {
           user.setSaldo(valor);
 
            repo.save(user);
+
+           transacaoResponseDTO.setUsuario(user.getNome());
+           transacaoResponseDTO.setStatus("deposito");
+           transacaoResponseDTO.setId(user.getId());
+           transacaoResponseDTO.setValor(valor);
+
 
        return usuario;
     }
@@ -182,6 +188,11 @@ public class UsuarioService {
          user.setSaldo(valor);
 
         repo.save(user);
+
+        transacaoResponseDTO.setStatus("saque");
+        transacaoResponseDTO.setUsuario(user.getNome());
+        transacaoResponseDTO.setValor(valor);
+        transacaoResponseDTO.setId(user.getId());
 
     }
     public TransferirResponseDTO transferir(String header, String destino, double valor){
@@ -365,6 +376,16 @@ public class UsuarioService {
 
         repo.save(usuarioAl);
 
+    }
+    public TransacaoResponseDTO historico(){
+        TransacaoResponseDTO transacao = new TransacaoResponseDTO();
+
+        transacao.setId(transacaoResponseDTO.getId());
+        transacao.setUsuario(transacaoResponseDTO.getUsuario());
+        transacao.setStatus(transacaoResponseDTO.getStatus());
+        transacao.setValor(transacaoResponseDTO.getValor());
+
+        return transacao;
     }
 
 }

@@ -197,6 +197,12 @@ public ResponseEntity<?> cadastro(@RequestBody UsuarioRequestDTO usuario){
             return ResponseEntity.status(401).body(response);
         }
    }
+   @GetMapping("/historico")
+   public ResponseEntity<?> historico(){
+        TransacaoResponseDTO hist = service.historico();
+
+        return ResponseEntity.ok(hist);
+   }
 
 
 }
